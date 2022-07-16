@@ -1,12 +1,9 @@
 import numpy as np
 import pandas as pd
-from flask import Flask, render_template
 import re
 from sklearn.feature_extraction.text import TfidfVectorizer
 from tellerofuntruth import y_pred
 from tellerofuntruth import score
-
-app = Flask(__name__)
 
 def normalise(text):
     # Remove Unicode
@@ -38,10 +35,25 @@ def tfidfSort(q, df, vec):
   return sim_sorted
   # Print the articles and their similarity values
 
-
-def search(searchTerm, csvDir):
+def getData():
     col_list = ["title", "text", "label"]
-    df=pd.read_csv(csvDir, usecols=col_list)
+    df=pd.read_csv('/Users/eric/Desktop/cseHackathon/news.csv', usecols=col_list)
+
+    data = []
+    i = 0
+    for articles in df['title']:
+        data.append(
+            {
+                'title': df['title'][i],
+                'text': df['text'][i],
+            })
+        i+=1
+    return data
+
+
+def search(searchTerm):
+    col_list = ["title", "text", "label"]
+    df=pd.read_csv('/Users/eric/Desktop/cseHackathon/news.csv', usecols=col_list)
 
     dataText = []
     # append article information into dataText list
@@ -64,14 +76,18 @@ def search(searchTerm, csvDir):
     for i, j in dataText_sorted:
         if j != 0.0:
             # print(f"this news is {y_pred[i]}, with a {round(score*100,2)}% accuracy")
-            resultList.append(i)
+            resultList.append(
+                {
+                    'articleId': i,
+                    'validity': y_pred[i]
+                }
+            )
 
 
-    return resultList
+    return { 'accuracy': round(score*100,2),
+             'articleIds': resultList 
+           }
 
-
-ls = search('TRUMP', '/Users/eric/Desktop/cseHackathon/news.csv')
-print(ls)
 # Todo:
 # [X] "borrowed" fake news detection source code from https://dataText-flair.training/blogs/advanced-python-project-detecting-fake-news/
 # [X] search engine implementation source code from https://towardsdatascience.com/create-a-simple-search-engine-using-python-412587619ff5
