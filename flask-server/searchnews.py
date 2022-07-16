@@ -37,7 +37,7 @@ def tfidfSort(q, df, vec):
 
 def getData():
     col_list = ["title", "text", "label"]
-    df=pd.read_csv('/Users/eric/Desktop/cseHackathon/news.csv', usecols=col_list)
+    df=pd.read_csv('/Users/eric/Desktop/cseHackathon/flask-server/data/news.csv', usecols=col_list)
 
     data = []
     i = 0
@@ -53,7 +53,7 @@ def getData():
 
 def search(searchTerm):
     col_list = ["title", "text", "label"]
-    df=pd.read_csv('/Users/eric/Desktop/cseHackathon/news.csv', usecols=col_list)
+    df=pd.read_csv('/Users/eric/Desktop/cseHackathon/flask-server/data/news.csv', usecols=col_list)
 
     dataText = []
     # append article information into dataText list
