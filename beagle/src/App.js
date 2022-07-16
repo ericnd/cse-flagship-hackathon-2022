@@ -10,11 +10,13 @@ function App() {
 
   return (
     <div className="App">
-      <header className="App-header">
-        <label></label>
-        <input type="text" onChange={e => setQuery(e.target.value)} placeholder="Search" />
-
-      </header>
+      <h1 className='header1'>Beagle 🐶</h1>
+      <h1 className='header1'>Sniffing Out 🐄💩</h1>
+      <div className='wrapper'>
+        <div className='search'>
+        <input type='text' onChange={e => setQuery(e.target.value)} placeholder="Type Something Newsworthy..." />
+        </div>
+      </div>
     </div>
   );
 }
