@@ -87,11 +87,12 @@ def search(searchTerm):
                     'validity': y_pred[i]
                 }
             )
-
+    
 
     return { 'accuracy': round(score*100,2),
              'articles': resultList 
            }
+    
 
 # Todo:
 # [X] "borrowed" fake news detection source code from https://dataText-flair.training/blogs/advanced-python-project-detecting-fake-news/
