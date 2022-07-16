@@ -39,10 +39,10 @@ def getData():
     col_list = ["title", "text", "label"]
     df=pd.read_csv('/Users/eric/Desktop/cseHackathon/flask-server/data/news.csv', usecols=col_list)
 
-    data = []
+    data = { 'articleArray': []}
     i = 0
     for articles in df['title']:
-        data.append(
+        data['articleArray'].append(
             {
                 'title': df['title'][i],
                 'text': df['text'][i],

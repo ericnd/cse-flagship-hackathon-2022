@@ -2,6 +2,7 @@ from searchnews import search, getData
 from flask import Flask, request, send_from_directory, jsonify
 
 app = Flask(__name__)
+app._static_folder = '/Users/eric/Desktop/cseHackathon/beagle/src'
 
 @app.route("/searchitem", methods=['GET'])
 def searchitem():
