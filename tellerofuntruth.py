@@ -6,8 +6,6 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import PassiveAggressiveClassifier
 from sklearn.metrics import accuracy_score, confusion_matrix
 
-print('LOADING...')
-
 #Read the data
 df=pd.read_csv('/Users/eric/Desktop/cseHackathon/news.csv')
 #Get shape and head
