@@ -1,9 +1,12 @@
 import numpy as np
 import pandas as pd
+from flask import Flask, render_template
 import re
 from sklearn.feature_extraction.text import TfidfVectorizer
 from tellerofuntruth import y_pred
 from tellerofuntruth import score
+
+app = Flask(__name__)
 
 def normalise(text):
     # Remove Unicode
@@ -20,13 +23,11 @@ def normalise(text):
     normalised_text = re.sub(r'\s{2,}', ' ', normalised_text)
     return normalised_text
 
-def search(q, df):
-  print("What would you like to search for?: ", q)
-  print()
-  print("These are the most relevant results: ")
+def tfidfSort(q, df, vec):
   # Convert the query become a vector
+  q = normalise(q)
   q = [q]
-  q_vec = vectorizer.transform(q).toarray().reshape(df.shape[0],)
+  q_vec = vec.transform(q).toarray().reshape(df.shape[0],)
   sim = {}
   # Calculate the similarity
   for i in range(10):
@@ -38,46 +39,42 @@ def search(q, df):
   # Print the articles and their similarity values
 
 
+def search(searchTerm, csvDir):
+    col_list = ["title", "text", "label"]
+    df=pd.read_csv(csvDir, usecols=col_list)
 
-col_list = ["title", "text", "label"]
-df=pd.read_csv('/Users/eric/Desktop/cseHackathon/news.csv', usecols=col_list)
+    dataText = []
+    # append article information into dataText list
+    i = 0
+    for articles in df['title']:
+        dataText.append(normalise(df['text'][i]))
+        i+=1
 
-dataText = []
-dataTextORIGINAL = []
-dataTitle = []
+    # Instantiate a TfidfVectorizer object
+    vectorizer = TfidfVectorizer()
+    # It fits the dataText and transform it as a vector
+    X = vectorizer.fit_transform(dataText)
+    # Convert the X as transposed matrix
+    X = X.T.toarray()
+    # Create a dataTextFrame and set the vocabulary as the index
+    df = pd.DataFrame(X, index=vectorizer.get_feature_names_out())
 
-# append article information into dataText list
-i = 0
-for articles in df['title']:
-    dataText.append(normalise(df['text'][i]))
-    dataTextORIGINAL.append(df['text'][i])
-    dataTitle.append(df['title'][i])
-    i+=1
-
-
-# Instantiate a TfidfVectorizer object
-vectorizer = TfidfVectorizer()
-# It fits the dataText and transform it as a vector
-X = vectorizer.fit_transform(dataText)
-# Convert the X as transposed matrix
-X = X.T.toarray()
-# Create a dataTextFrame and set the vocabulary as the index
-df = pd.DataFrame(X, index=vectorizer.get_feature_names_out())
-
-while 1:
-    prompt = input("search for: ")
-    dataText_sorted = search(prompt, df)
+    resultList = []
+    dataText_sorted = tfidfSort(searchTerm, df, vectorizer)
     for i, j in dataText_sorted:
         if j != 0.0:
-            print(dataTitle[i])
-            print(f"this news is {y_pred[i]}, with a {round(score*100,2)}% accuracy")
-            print(dataTextORIGINAL[i][:300] + '...')
-            print()
-            print()
+            # print(f"this news is {y_pred[i]}, with a {round(score*100,2)}% accuracy")
+            resultList.append(i)
 
+
+    return resultList
+
+
+ls = search('TRUMP', '/Users/eric/Desktop/cseHackathon/news.csv')
+print(ls)
 # Todo:
 # [X] "borrowed" fake news detection source code from https://dataText-flair.training/blogs/advanced-python-project-detecting-fake-news/
-# [ ] search engine implementation 
+# [X] search engine implementation source code from https://towardsdatascience.com/create-a-simple-search-engine-using-python-412587619ff5
 # [ ] front end connected to backend 
 
 # print(df['text'])
