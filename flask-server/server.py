@@ -3,9 +3,10 @@ from flask import Flask, request, send_from_directory, jsonify
 
 app = Flask(__name__)
 
-@app.route("/searchitem")
+@app.route("/searchitem", methods=['GET'])
 def searchitem():
-    docIdList = search('trump')
+    searching = request.args.get('searching')
+    docIdList = search(str(searching))
     return jsonify(docIdList)
 
 @app.route("/data")
