@@ -55,11 +55,15 @@ def search(searchTerm):
     col_list = ["title", "text", "label"]
     df=pd.read_csv('/Users/eric/Desktop/cseHackathon/flask-server/data/news.csv', usecols=col_list)
 
+    dataTitle = []
     dataText = []
+    dataTextOG = []
     # append article information into dataText list
     i = 0
     for articles in df['title']:
         dataText.append(normalise(df['text'][i]))
+        dataTitle.append(df['title'][i])
+        dataTextOG.append(df['text'][i])
         i+=1
 
     # Instantiate a TfidfVectorizer object
@@ -78,14 +82,15 @@ def search(searchTerm):
             # print(f"this news is {y_pred[i]}, with a {round(score*100,2)}% accuracy")
             resultList.append(
                 {
-                    'articleId': i,
+                    'title': dataTitle[i],
+                    'text': dataTextOG[i][:300] + '...',
                     'validity': y_pred[i]
                 }
             )
 
 
     return { 'accuracy': round(score*100,2),
-             'articleIds': resultList 
+             'articles': resultList 
            }
 
 # Todo:
