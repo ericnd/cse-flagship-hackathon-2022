@@ -34,7 +34,7 @@ function SearchBar({ placeholder, data }) {
           value={wordEntered}
           onChange={handleFilter}
         />
-        <button onClick={event =>  window.location.href='http://127.0.0.1:5000/searchitem?searching='+wordEntered}> <SearchIcon /> </button>
+        <button onClick={event =>  window.location.href='https://i.imgur.com/xStTiLb.png'}> <SearchIcon /> </button>
         </div>
     </div>
   );
