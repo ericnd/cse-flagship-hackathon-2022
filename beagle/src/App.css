@@ -1,25 +1,14 @@
-body {
-  font-family: 'Poppins', sans-serif; 
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap");
+.App {
+  width: 100vw;
+  height: 100vh;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
   align-items: center;
-  min-height: 100vh;
-  font-size: 1.5rem;
-  background-color:#333A45;
+  flex-direction: column;
+  font-family: "Nunito", sans-serif;
+  background-image: linear-gradient(90deg, #3c3346, #2b264a);
 }
-
-.wrapper {
-  position: relative;
-  display: flex;
-  min-width: 100px;
-}
-
-h1 {
-  color: #939EAE;
-}
-
-.search input {
-  height: 30px;
-  width: 50vw;
+body {
+  padding: 0;
+  margin: 0;
 }

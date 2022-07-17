@@ -1,60 +1,43 @@
-import React, { Component } from 'react';
-import DownShift from 'downshift';
-import { withApollo } from 'react-apollo';
-import fetchSuggestions from './queries/fetchSuggestions';
-import styles from './styles/SearchBar.css';
+import React, { useState } from "react";
+import "./SearchBar.css";
+import SearchIcon from "@material-ui/icons/Search";
 
-class SearchBar extends Component {
-  constructor(props){
-    super(props);
-    this.state = {
-      input: '',
-      items: []
-    }
-  }
-  onChange(selectedItem){
-    this.setState({input: selectedItem});
-  }
-  async onInputValueChange(input){
-    await this.setState({input});
-    const results = await this.props.client.query({
-      query: fetchSuggestions,
-      variables: {
-        input: this.state.input
-      }
+function SearchBar({ placeholder, data }) {
+  const [filteredData, setFilteredData] = useState([]);
+  const [wordEntered, setWordEntered] = useState("");
+
+  const handleFilter = (event) => {
+    const searchWord = event.target.value;
+    setWordEntered(searchWord);
+    const newFilter = data.filter((value) => {
+      return value.title.toLowerCase().includes(searchWord.toLowerCase());
     });
-    this.setState({items: results.data.suggestions});
-  }
-  render(){
-    return (
-      <DownShift
-        inputValue={this.state.input}
-        onChange={this.onChange.bind(this)}
-        onInputValueChange={this.onInputValueChange.bind(this)}
-        render={({getInputProps,getItemProps,isOpen, selectedItem,highlightedIndex})=>(
-          <div>
-            <input placeholder={'Start typing..'} className={styles.searchBar} {...getInputProps()} type="text"/>
-            {isOpen?(
-              <div className={styles.results}>
-                {this.state.items.map((result,index)=>{
-                  return (
-                    <div
-                      className={styles.item} 
-                      {...getItemProps({item: result})} 
-                      key={result}
-                      style={{backgroundColor: highlightedIndex === index ? 'rgb(179, 218, 255)' : 'white'}}
-                    >
-                      {result}
-                    </div>
-                  );
-                })}
-              </div>
-            ):null}
-          </div>
-        )}
-      />
-    );
-  }
+
+    if (searchWord === "") {
+      setFilteredData([]);
+    } else {
+      setFilteredData(newFilter);
+    }
+  };
+
+  const clearInput = () => {
+    setFilteredData([]);
+    setWordEntered("");
+  };
+
+  return (
+    <div className="search">
+      <div className="searchInputs">
+        <input
+          type="text"
+          placeholder={placeholder}
+          value={wordEntered}
+          onChange={handleFilter}
+        />
+        <button onClick={event =>  window.location.href='http://127.0.0.1:5000/searchitem?searching='+wordEntered}> <SearchIcon /> </button>
+        </div>
+    </div>
+  );
 }
 
-export default withApollo(SearchBar);
+export default SearchBar;
